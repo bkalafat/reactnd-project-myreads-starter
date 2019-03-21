@@ -1,6 +1,28 @@
 import React, {Component} from 'react'
+import * as BooksAPI from './BooksAPI'
+import Book from './Book'
 
 class SearchBox extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      books : []
+    }
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then((books) => {
+        this.setState(() => ({
+          books
+        }))
+      })
+  }
+
+  handleShelfChange = (shelf,id) => {
+  };
+
   render() {
     return (
       <div className="search-books">
@@ -20,7 +42,18 @@ class SearchBox extends Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+            <ol className="books-grid">
+            {
+
+              this.state.books.map((book) => (
+                <li key={book.id}>
+                  <Book onShelfChange={this.handleShelfChange} title={book.title} author={book.authors[0]} id={book.id} shelf="currentlyReading" url={`url(${book.imageLinks.smallThumbnail}`} />
+                </li>
+              ))
+            }
+
+
+          </ol>
             </div>
           </div>
     )

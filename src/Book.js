@@ -22,7 +22,7 @@ class Book extends Component {
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={this.props.style}></div>
+          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: this.props.url}}></div>
           <div className="book-shelf-changer" >
             <select onChange={this.handleChange} value = {this.props.shelf} >
               <option value="move" disabled>Move to...</option>
@@ -44,7 +44,7 @@ Book.propTypes = {
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   shelf: PropTypes.string.isRequired,
-  style: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
   onShelfChange: PropTypes.func.isRequired
 }
 
