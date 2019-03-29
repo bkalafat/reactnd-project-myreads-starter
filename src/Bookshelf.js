@@ -1,22 +1,30 @@
 import React, { Component } from 'react'
 import Shelf from './Shelf'
 import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types'
+import * as BooksAPI from './BooksAPI'
+
 
 class BookShelf extends Component {
 
   constructor(props) {
-    super(props);
-
+    super(props)
     this.state = {
-      books : this.props.books,
-      query: ''
-    };
+      books: []
+    }
+    }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ books: nextProps.books });
   }
 
-  handleShelfChange = (shelf,id) => {
-    var foundIndex = this.state.books.findIndex(x => x.id === id);
-    this.setState(currState => currState.books[foundIndex].shelf = shelf
-    )
+  handleShelfChange = () => {
+    BooksAPI.getAll()
+      .then((books) => {
+        this.setState(() => ({
+            books: books
+        }))
+      })
   };
 
   render() {
@@ -46,6 +54,10 @@ class BookShelf extends Component {
           </div>
     )
   }
+}
+
+BookShelf.propTypes = {
+  books: PropTypes.array.isRequired
 }
 
 export default BookShelf

@@ -1,20 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import * as BooksAPI from './BooksAPI'
 
 class Book extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      shelf : this.props.shelf
-    };
-  }
-
   handleChange = event => {
-
     event.preventDefault();
-    this.props.onShelfChange(event.target.value,this.props.id);
+    BooksAPI.update(this.props.book, event.target.value).then()
+    this.props.onShelfChange();
   };
 
   render() {
@@ -22,9 +15,9 @@ class Book extends Component {
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: this.props.url}}></div>
+          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: this.props.book.hasOwnProperty('imageLinks') ? `url(${this.props.book.imageLinks.smallThumbnail}`:''}}></div>
           <div className="book-shelf-changer" >
-            <select onChange={this.handleChange} value = {this.props.shelf} >
+            <select onChange={this.handleChange} value={this.props.book.hasOwnProperty('shelf') ? this.props.book.shelf : 'none'} >
               <option value="move" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
@@ -33,18 +26,15 @@ class Book extends Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.author}</div>
+        <div className="book-title">{this.props.book.title}</div>
+        <div className="book-authors">{this.props.book.authors}</div>
       </div>
     )
   }
 }
 
 Book.propTypes = {
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  shelf: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
+  book: PropTypes.object.isRequired,
   onShelfChange: PropTypes.func.isRequired
 }
 

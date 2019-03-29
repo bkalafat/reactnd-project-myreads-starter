@@ -9,7 +9,7 @@ class SearchBox extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      shelves : this.props.shelves
+      books:[]
     };
   }
 
@@ -17,25 +17,20 @@ class SearchBox extends Component {
     BooksAPI.getAll()
       .then((books) => {
         this.setState(() => ({
-          books
+          books : books
         }))
       })
   }
 
-  handleShelfChange = (shelf,id) => {
-    this.props.onAddBook(shelf,id);
-  };
-
-  handleClose = event => {
-    event.preventDefault();
-    this.props.onClose();
+  handleShelfChange = () => {
+    this.props.onAddBook();
   };
 
   search = event => {
     event.preventDefault();
     BooksAPI.search(event.target.value).then((books)=> {
       this.setState(() => ({
-        books
+        books : books
       }))
     });
 
@@ -64,17 +59,13 @@ class SearchBox extends Component {
             <div className="search-books-results">
             <ol className="books-grid">
             {
-              Array.isArray(this.state.books) && this.state.books.map((book) => (book.authors && book.authors.length > 0 ?
+              Array.isArray(this.state.books) && this.state.books.map((book) =>
                 <li key={book.id}>
                   <Book
                   onShelfChange={this.handleShelfChange}
-                  title={book.title}
-                  author={book.authors[0]}
-                  id={book.id}
-                  shelf={this.state.shelves.filter(s => s.id === book.id).length > 0 ? this.state.shelves.find(s => s.id === book.id).shelf : "none"}
-                  url={`url(${book.imageLinks.smallThumbnail}`} />
-                </li> : null
-              ))
+                  book={book}/>
+                </li>
+              )
             }
           </ol>
             </div>
@@ -84,8 +75,7 @@ class SearchBox extends Component {
 }
 
 SearchBox.propTypes = {
-  onAddBook: PropTypes.func.isRequired,
-  shelves: PropTypes.array.isRequired
+  onAddBook: PropTypes.func.isRequired
 }
 
 export default SearchBox
