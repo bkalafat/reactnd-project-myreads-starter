@@ -11,15 +11,21 @@ class SearchBox extends Component {
     this.state = {
       books:[]
     };
+    this.currentBooks = []
   }
 
+
+
   componentDidMount() {
+
     BooksAPI.getAll()
       .then((books) => {
         this.setState(() => ({
           books : books
         }))
+        this.currentBooks = books
       })
+
   }
 
   handleShelfChange = () => {
@@ -29,11 +35,15 @@ class SearchBox extends Component {
   search = event => {
     event.preventDefault();
     BooksAPI.search(event.target.value).then((books)=> {
+      books.forEach(book => {
+        book.shelf = this.currentBooks.some(curBook => book.id === curBook.id) ?
+        this.currentBooks.find(curBook => book.id === curBook.id).shelf : "none"
+      });
+
       this.setState(() => ({
         books : books
       }))
     });
-
   }
 
   render() {
